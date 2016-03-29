@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <pre id="text-dump-here"></pre>
+        <script>
+            var info = {};
+            if (screen) {
+                info['screen'] = {}
+                info['screen']['width'] = screen.width;
+                info['screen']['height'] = screen.height;
+                info['screen']['colorDepth'] = screen.colorDepth;
+            }
+            
+            var navKeys = ['appName', 'platform', 'cookieEnabled', 'appCodeName', 'appVersion', 'language', 'systemLanguage', 'userLanguage', 'oscpu', 'cpuClass', 'productSub', 'userAgent'];
+            for (key in navigator) {
+                if ((navKeys.indexOf(key) > -1)) {
+                    info[key] = navigator[key];
+                }
+            }
+    
+            if (navigator['plugins']) {
+                info['plugins'] = {};
+                for (var plugin in navigator['plugins']) {
+                    if ((navigator['plugins'][plugin]) && (typeof navigator['plugins'][plugin] == 'object')) {
+                        var version = navigator.plugins[plugin].name.match(/[ ]([\d.]+)/);
+                        if (version) {
+                            version = version[0].trim();    
+                        }
+                        info['plugins'][navigator['plugins'][plugin]['name']] = version;
+                    }
+                }
+            }
+    
+            if (navigator['mimeTypes']) {
+                info['mimeTypes'] = {};
+                for (var mimeType in navigator['mimeTypes']) {
+                    if ((navigator['mimeTypes'][mimeType]) && (typeof navigator['mimeTypes'][mimeType] == 'object')) {
+                        info['mimeTypes'][navigator['mimeTypes'][mimeType]['type']] = navigator['mimeTypes'][mimeType]['description'];
+                    }
+                }
+            }
+    
+            document.getElementById("text-dump-here").innerHTML = JSON.stringify(info, function(k, v) { if (v === undefined) { return null; } return v; }, 4);
+        </script>
+    </body>
+</html>
