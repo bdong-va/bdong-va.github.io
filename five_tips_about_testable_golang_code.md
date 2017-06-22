@@ -1,5 +1,5 @@
-# How to write untestable code in golang
-According to my experience in movies, if you want to be a super bad guy, you will need to work harder than the good guys. Think about it! You need to hire evil scientists, build huge death bomb to threaten the world, a good plan and a lot of money. But be a good guy basically just need some brave hearts, you do not even have known about the structure of bomb because when choosing red/blue wire to cut, good guys never mess up.
+# How to write UNtestable code in golang
+According to my experience in movies, if you want to be a super bad guy, you will need to work harder than the good guys. Think about it! You need to hire evil scientists, build a huge death bomb to threaten the world, a good plan and a lot of money. But be a good guy you just basically need some brave hearts, you do not even have to know about the structure of bomb because when choosing red/blue wire to cut, good guys never mess up.
 
 Yeah, that's not fair.
 
@@ -25,13 +25,13 @@ First, let take a look at this chart:
 
 ![that is how good Python is.](https://imgs.xkcd.com/comics/python.png)
 
-Mock(testify) in golang is good. Just not that *magic* as Python's. When I first learn how to use it, the thought occurred to my mind most frequently is "What, I need to do this manually?" and "If I need to do this manually, what are YOU doing, mock?"
+Mock(testify) in golang is good. Just not quite as *magical* as mocking in Python. When I first learn how to use it, the thought occurred to me most frequently was "What, I need to do this manually?" and "If I need to do this manually, what are YOU doing, mock?"
 
 ~~" I am Groot." Mock replied.~~
 
 Mock in python can automatically do two things, one is **replace current real code to mock code**, another is **verify calls happen as expected**.
 
-Mock in go testify can do the second job(verify calls) but not first one(replace real code to mock). That part has to be done manually. And manually replace have more limitation than magic replace.
+Mock in go testify can do the second job(verify calls) but not first one(replace real code to mock). That part has to be done manually. And manually replacement have more limitations than magic replacement.
 
 We can talk about the limitations in next sections, for this section, just simply forget golang mock is not as powerful as python's mock, is a good start to write untestable code in go.
 
@@ -54,7 +54,7 @@ Test a function like that in Python is easy. Define `mock.Aggregation` somewhere
 
 But we cannot do the same thing in golang.
 
-Remember, golang is a strong type language. If a function takes `elastic.SearchService` as the parameter, you cannot pass anything else. The only possible way is to create a real `elastic.SearchService` object, and do some tweaking in `Aggregation` method. It is complex, and when you seeking the solution about "how to create a real elastic.SearchService object", it is easy to get lost in chasing infinite rabbits in infinite holes. You will forget what you want at first. ~~Just like a bad marriage.~~
+Remember, golang is a strong type language. If a function takes `elastic.SearchService` as the parameter, you cannot pass anything else. The only possible way is to create a real `elastic.SearchService` object, and do some tweaking in `Aggregation` method. It is complex, and when you start seeking out the solution for "how to create a real elastic.SearchService object", it is easy to get lost in chasing infinite rabbits in infinite holes. You will forget what you want at first. ~~Just like a bad marriage.~~
 
 Good guys have a solution for this. Instead of a struct, passing an interface can solve it.
 Still same function:
@@ -71,7 +71,7 @@ type SearchServiceInterface interface {
 }
 ```
 
-It looks almost the same, the only difference is instead of `elastic.SearchService`, we passed in an `ElasticRepositoryInterface`. For this example, the compiler would not complain about the object passed in if it has `Aggregation(/* correct type variable here*/)` method. that means we can pass a mock like this into it for testing:
+It looks almost the same, the only difference is instead of `elastic.SearchService`, we passed in an `SearchServiceInterface`. For this example, the compiler would not complain about the object passed in if it has `Aggregation(/* correct type variable here*/)` method. that means we can pass a mock like this into it for testing:
 
 ```go
 type SearchServiceMock struct {
@@ -82,7 +82,7 @@ type SearchServiceMock struct {
     return args.Get(0).(*SearchServiceMock)
 }
 ```
-Then we can have all benefits of strong type language, and still keep the flexible of testability.
+Then we can have all the benefits of strong type language and still keep it flexible enough for testing.
 
 Of course, as a bad guy who wants to make golang code untestable, you will just pass a struct into the function, nailed it.
 
@@ -105,7 +105,7 @@ func (s *scoreRepository) Create(ctx context.Context, accountGroupID string) (in
 
 If same logic happens in Python, testing will be easy. `@patch` the `calculateListingScore` function and let it return `any_number_we_need, nil`, then verify the result.
 
-But in the cruel world of golang, everything is getting harder: we do not have `@patch`, and we cannot mocking function. If you call a function in somewhere, you cannot mock it at all. If you want to test a function/method included an external function call, you have to call it in real. that is not good.
+But in the cruel world of golang, everything is harder: we do not have `@patch` like we do in Python, and we cannot mocking a function at all. If you call a function in somewhere, you cannot mock it at all. If you want to test a function/method includes an external function call, you have to call that function for real, and That is not good in the world of testing.
 
 So we have a solution for this: put the function into a struct can be mocked by the interface.
 
