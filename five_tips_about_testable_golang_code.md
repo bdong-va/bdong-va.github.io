@@ -50,7 +50,7 @@ func addAggregation(search *elastic.SearchService) *elastic.SearchService {
 
 I removed some information to make it more clear. This function takes an `elastic.SearchService`, do something to it and return `elastic.SearchService`.
 
-Test a function like that in Python is easy. Define `mock.Aggregation` somewhere, pass this mock in, assert it be called with given parameter, then assert mock been returned. done.
+Testing a function like that in Python is easy. Define `mock.Aggregation` somewhere, pass this mock in, assert it be called with given parameter, then assert mock been returned. done.
 
 But we cannot do the same thing in golang.
 
