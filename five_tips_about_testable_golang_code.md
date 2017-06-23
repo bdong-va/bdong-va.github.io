@@ -1,15 +1,15 @@
 # How to write UNtestable code in golang
-According to my experience in movies, if you want to be a super bad guy, you will need to work harder than the good guys. Think about it! You need to hire evil scientists, build a huge death bomb to threaten the world, a good plan and a lot of money. But be a good guy you just basically need some brave hearts, you do not even have to know about the structure of bomb because when choosing red/blue wire to cut, good guys never mess up.
+According to my experience in movies, if you want to be a super bad guy, you will need to work harder than the good guys. Think about it! You need to hire evil scientists, build a huge death bomb to threaten the world, a good plan and a lot of money. But to be a good guy you just basically need some brave hearts, you do not even have to know about the structure of the bomb because when choosing red/blue wire to cut, good guys never mess up.
 
 Yeah, that's not fair.
 
-Good news (?) everyone, in software developer side, mess up code is far easier than build it in a good way. If you keep following points in mind, make golang code untestable would be so easy.
+Good news (?) everyone, on the software developer side, messing up code is far easier than build it in a good way. If you keep following points in mind, making golang code untestable would be so easy.
 
 Before reading this, I assume you already read [Aaron's Blog: Testify - A Toolkit for Golang Unit Tests](https://vendasta-blog.appspot.com/blog/BL-F5QKDT6H/).
 
 ## 1. Always expected golang mock as powerful as Python mock
 
-This is the easiest part. If you start with something with Python, all you need is ~~love~~ do nothing extra, just write code with all Python style, you can make it untestable.
+This is the easiest part. If you start with something with Python, all you need is ~~love~~ do nothing extra, just write code in Python style and you can make it untestable.
 
 First, let take a look at this chart:
 
@@ -33,7 +33,7 @@ Mock in python can automatically do two things, one is **replace current real co
 
 Mock in go testify can do the second job(verify calls) but not first one(replace real code to mock). That part has to be done manually. And manually replacement have more limitations than magic replacement.
 
-We can talk about the limitations in next sections, for this section, just simply forget golang mock is not as powerful as python's mock, is a good start to write untestable code in go.
+We can talk about the limitations in next sections, for this section, just simply forgetting golang mock is not as powerful as python's mock, is a good start to write untestable code in go.
 
 ## 2. Interface who? we just pass struct itself.
 TL;DR, `struct` cannot be mocked when passing as a parameter.
@@ -107,7 +107,7 @@ If same logic happens in Python, testing will be easy. `@patch` the `calculateLi
 
 But in the cruel world of golang, everything is harder: we do not have `@patch` like we do in Python, and we cannot mocking a function at all. If you call a function in somewhere, you cannot mock it at all. If you want to test a function/method includes an external function call, you have to call that function for real, and That is not good in the world of testing.
 
-So we have a solution for this: put the function into a struct can be mocked by the interface.
+So we have a solution for this: put the function into a struct that can be mocked by the interface.
 
 ```go
 func (s *scoreRepository) Create(ctx context.Context, calculator calculatorInterface, accountGroupID string) (int64, error) {
@@ -121,7 +121,7 @@ func (s *scoreRepository) Create(ctx context.Context, calculator calculatorInter
 }
 ```
 
-Now when we test it, we can pass a `calculatorMock` which implement with the `calculatorInterface`. Then we can do assertion or make the mock method return whatever value we want.
+Now when we test it, we can pass a `calculatorMock` which implements with the `calculatorInterface`. Then we can do assertion or make the mock method return whatever value we want.
 
 Or you can choose another way to do it, make the `calculator` an attribute of `scoreRepository`:
 
