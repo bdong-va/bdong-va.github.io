@@ -1,6 +1,6 @@
 # RxJS 101.1 Magic Faucet, Fruit Counting and Why Everything Could Be Stream
 
-Thanks to @bdong-404 finished the first half of this blog, and @Khuang-va provided some examples.
+@bdong-404 finished the first half of this blog, @pguo-va finish the second half, @Khuang-va provided some examples and imprtant support.
 
 ## Intro
 
